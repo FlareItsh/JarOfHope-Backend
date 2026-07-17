@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Http\Resources\UserResource;
 use App\Repository\UserRepository;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
@@ -17,11 +18,40 @@ class UserService
 
     public function loginUser(object $payload)
     {
-        if (empty($payload->email) || empty($payload->password)) {
-            return response()->json(['message' => 'Email and password are required'], 400);
+
+        try {
+            $validated = $payload->validate([
+                'nickname' => 'required|string',
+                'password' => 'required|string',
+            ]);
+        } catch (ValidationException $e) {
+            $errors = $e->validator->errors();
+
+            // 1. Both are missing
+            if ($errors->has('nickname') && $errors->has('password')) {
+                return response()->json(['message' => 'Nickname and Password fields are required'], 400);
+            }
+
+            // 2. Only nickname is missing
+            if ($errors->has('nickname')) {
+                return response()->json(['message' => 'Nickname field is required'], 400);
+            }
+
+            // 3. Only password is missing
+            if ($errors->has('password')) {
+                return response()->json(['message' => 'Password field is required'], 400);
+            }
+
+            // Fallback for other validation rules (like if they are not strings)
+            return response()->json(['message' => $errors->first()], 400);
         }
 
-        $user = $this->userRepository->findByField('email', $payload->email);
+        // If it passes, your validated data is ready:
+        $nickname = $validated['nickname'];
+        $password = $validated['password'];
+
+
+        $user = $this->userRepository->findByField('nickname', $payload->nickname);
 
         if (! $user) {
             return response()->json(['message' => 'User not found'], 401);
@@ -31,7 +61,7 @@ class UserService
             return response()->json(['message' => 'Invalid password'], 401);
         }
 
-        $token = $user->createToken($user->email)->plainTextToken;
+        $token = $user->createToken($user->nickname)->plainTextToken;
 
         return response()->json([
             'user' => new UserResource($user),

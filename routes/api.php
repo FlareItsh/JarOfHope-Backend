@@ -2,11 +2,24 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Route::middleware('auth:sanctum')->group(function () {
+//     Route::delete('/logout', [AuthController::class, 'logout']);
+//     Route::get('orders/summary', OrderSummaryController::class);
 
-Route::get('test', function () {
-    return response()->json(['message' => 'working']);
+//     Route::apiResources([
+//         'companies' => CompanyController::class,
+//         'languages' => LanguageController::class,
+//         'customers' => CustomerController::class,
+//         'orders' => OrderController::class,
+//         'order-items' => OrderItemController::class,
+//         'products' => ProductController::class,
+//     ]);
+// });
+
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::delete('/logout', [AuthController::class, 'logout']);
 });

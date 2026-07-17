@@ -17,8 +17,6 @@ use Laravel\Sanctum\HasApiTokens;
  * @property int $id
  * @property string $uuid
  * @property string $nickname
- * @property string $email
- * @property Carbon|null $email_verified_at
  * @property string $password
  * @property string|null $remember_token
  * @property Carbon|null $created_at
@@ -51,7 +49,6 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }

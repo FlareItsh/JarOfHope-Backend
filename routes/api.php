@@ -21,12 +21,12 @@ use App\Http\Controllers\AttachmentController;
 // });
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/generate-nickname', [AuthController::class, 'generateNickname']);
+Route::post('/messages', [MessageController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/logout', [AuthController::class, 'logout']);
 
-    Route::apiResources([
-        'messages' => MessageController::class,
-        'attachments' => AttachmentController::class
-    ]);
+    Route::apiResource('messages', MessageController::class)->except(['store']);
+    Route::apiResource('attachments', AttachmentController::class);
 });

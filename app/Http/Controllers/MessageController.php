@@ -40,7 +40,7 @@ class MessageController extends Controller
         $this->messageService->deleteMessage($uuid);
         return response()->json(['message' => 'Deleted successfully'], 200);
     }
-    
+
     public function restore(string $uuid)
     {
         return $this->messageService->restoreMessage($uuid);

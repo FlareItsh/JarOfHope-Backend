@@ -12,14 +12,26 @@ class MessageRepository
         return Message::latest()->paginate($perPage);
     }
 
+    public function paginateByField(string $field, $value, int $perPage = 15)
+    {
+        return Message::where($field, $value)->latest()->paginate($perPage);
+    }
+
     public function create(array $payload)
     {
         return Message::create($payload);
     }
 
+    // public function findByUuid(string $uuid)
+    // {
+    //     return Message::where('uuid', $uuid)->firstOrFail();
+    // }
+
     public function findByUuid(string $uuid)
     {
-        return Message::where('uuid', $uuid)->firstOrFail();
+        return Message::with(['user', 'attachments'])
+            ->where('user_uuid', $uuid)
+            ->get();
     }
 
     public function findByField(string $field, $value)

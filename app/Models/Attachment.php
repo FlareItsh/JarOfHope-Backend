@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
     'file_path', // Prevents internal server paths from being exposed via JSON
 ])]
 
-class attachment extends Model
+class Attachment extends Model
 {
     use HasUuids;
 

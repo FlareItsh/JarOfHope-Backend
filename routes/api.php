@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\AttachmentController;
 
 // Route::middleware('auth:sanctum')->group(function () {
 //     Route::delete('/logout', [AuthController::class, 'logout']);
@@ -22,4 +24,9 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/logout', [AuthController::class, 'logout']);
+
+    Route::apiResources([
+        'messages' => MessageController::class,
+        'attachments' => AttachmentController::class
+    ]);
 });

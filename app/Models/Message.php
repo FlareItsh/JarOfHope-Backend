@@ -32,4 +32,9 @@ class Message extends Model
     {
         return $this->hasMany(Attachment::class, 'message_uuid', 'uuid');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_uuid', 'uuid');
+    }
 }

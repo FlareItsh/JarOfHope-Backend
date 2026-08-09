@@ -10,7 +10,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
     'uuid',
     'message',
     'category',
-    'user_uuid'
+    'user_uuid',
+    'parent_uuid'
 ])]
 
 class Message extends Model
@@ -36,5 +37,15 @@ class Message extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_uuid', 'uuid');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Message::class, 'parent_uuid', 'uuid');
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(Message::class, 'parent_uuid', 'uuid');
     }
 }

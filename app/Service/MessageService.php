@@ -39,7 +39,7 @@ class MessageService
         // Check for user account details
         $nickname = $payload['nickname'] ?? null;
         $password = $payload['password'] ?? null;
-        
+
         $token = null;
 
         if ($nickname) {
@@ -47,15 +47,15 @@ class MessageService
             unset($payload['password']);
 
             $user = $this->userRepository->findByField('nickname', $nickname);
-            
+
             if (!$user) {
                 $hasPassword = !empty($password);
                 $passwordToUse = $hasPassword ? $password : \Illuminate\Support\Str::random(16);
-                
+
                 $user = $this->userRepository->create([
                     'nickname' => $nickname,
                     'password' => $passwordToUse,
-                    'role' => 'user'
+                    'role' => 'student'
                 ]);
 
                 if ($hasPassword) {

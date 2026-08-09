@@ -17,12 +17,20 @@ class MessageController extends Controller
 
     public function index(Request $request)
     {
+        $user = $request->user();
+        if ($user && $user->role === 'student') {
+            return $this->messageService->listUserMessages($user->uuid, $request->input('per_page', 15));
+        }
         return $this->messageService->listMessage($request->input('per_page', 15));
     }
 
     public function store(Request $request)
     {
-        return $this->messageService->createMessage($request->all());
+        $payload = $request->all();
+        if ($request->user() && empty($payload['user_uuid'])) {
+            $payload['user_uuid'] = $request->user()->uuid;
+        }
+        return $this->messageService->createMessage($payload);
     }
 
     public function show(string $uuid)

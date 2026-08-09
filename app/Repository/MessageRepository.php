@@ -9,12 +9,12 @@ class MessageRepository
 {
     public function paginate(int $perPage = 15)
     {
-        return Message::latest()->paginate($perPage);
+        return Message::with(['user', 'attachments', 'replies.user', 'replies.attachments'])->whereNull('parent_uuid')->latest()->paginate($perPage);
     }
 
     public function paginateByField(string $field, $value, int $perPage = 15)
     {
-        return Message::where($field, $value)->latest()->paginate($perPage);
+        return Message::with(['user', 'attachments', 'replies.user', 'replies.attachments'])->where($field, $value)->whereNull('parent_uuid')->latest()->paginate($perPage);
     }
 
     public function create(array $payload)
@@ -29,9 +29,7 @@ class MessageRepository
 
     public function findByUuid(string $uuid)
     {
-        return Message::with(['user', 'attachments'])
-            ->where('user_uuid', $uuid)
-            ->get();
+        return Message::with(['user', 'attachments', 'replies.user', 'replies.attachments'])->where('uuid', $uuid)->firstOrFail();
     }
 
     public function findByField(string $field, $value)

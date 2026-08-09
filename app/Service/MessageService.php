@@ -66,16 +66,37 @@ class MessageService
             $payload['user_uuid'] = $user->uuid;
         }
 
+        // If message is null (due to empty string conversion) but we have attachments, set a fallback
+        if (empty($payload['message']) && !empty($attachments)) {
+            $payload['message'] = '[Attachment]';
+        }
+
         // Create the message
         $model = $this->messageRepository->create($payload);
 
         // If there are attachments, save them using the relationship
         if (!empty($attachments)) {
-            $model->attachments()->createMany($attachments);
+            $formattedAttachments = [];
+            foreach ($attachments as $attachment) {
+                if ($attachment instanceof \Illuminate\Http\UploadedFile) {
+                    $path = $attachment->store('attachments', 'public');
+                    $formattedAttachments[] = [
+                        'file_name' => $attachment->getClientOriginalName(),
+                        'file_path' => asset('storage/' . $path),
+                        'mime_type' => $attachment->getMimeType(),
+                        'file_size' => $attachment->getSize(),
+                    ];
+                } elseif (is_array($attachment)) {
+                    $formattedAttachments[] = $attachment;
+                }
+            }
+            if (!empty($formattedAttachments)) {
+                $model->attachments()->createMany($formattedAttachments);
+            }
         }
 
-        // Load the attachments so they appear in the returned Resource
-        $model->load('attachments');
+        // Load the attachments and user so they appear in the returned Resource
+        $model->load(['attachments', 'user']);
 
         $response = new MessageResource($model);
 

@@ -26,6 +26,7 @@ Route::post('/messages', [MessageController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/logout', [AuthController::class, 'logout']);
+    Route::put('/profile', [App\Http\Controllers\UserController::class, 'updateProfile']);
 
     Route::apiResource('messages', MessageController::class)->except(['store']);
     Route::apiResource('attachments', AttachmentController::class);

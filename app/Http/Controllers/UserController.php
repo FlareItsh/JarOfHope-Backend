@@ -45,4 +45,26 @@ class UserController extends Controller
     {
         return $this->userService->restoreUser($uuid);
     }
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'nickname' => 'sometimes|required|string|max:255',
+            'current_password' => 'required_with:password|current_password',
+            'password' => 'nullable|string|min:4|confirmed',
+        ]);
+
+        if (isset($validated['nickname'])) {
+            $user->nickname = $validated['nickname'];
+        }
+
+        if (!empty($validated['password'])) {
+            $user->password = \Illuminate\Support\Facades\Hash::make($validated['password']);
+        }
+
+        $user->save();
+
+        return response()->json(['message' => 'Profile updated successfully', 'user' => $user]);
+    }
 }

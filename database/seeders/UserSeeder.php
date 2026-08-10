@@ -13,23 +13,30 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
-            'nickname' => "sample_user",
-            'password' => Hash::make("password"),
-            'role' => "student",
-        ]);
-        // student account
-        User::factory()->create([
-            'nickname' => 'user123',
-            'password' => Hash::make('password'),
-            'role' => 'student',
-        ]);
+        // User::factory()->create([
+        //     'nickname' => "sample_user",
+        //     'password' => Hash::make("password"),
+        //     'role' => "student",
+        // ]);
+        // // student account
+        // User::factory()->create([
+        //     'nickname' => 'user123',
+        //     'password' => Hash::make('password'),
+        //     'role' => 'student',
+        // ]);
 
         // admin account
         User::factory()->create([
-            'nickname' => 'admin123',
-            'password' => Hash::make('password'),
+            'nickname' => 'Admin001',
+            'password' => Hash::make('Admin123'),
             'role' => 'admin',
+        ]);
+
+        // superadmin account
+        User::factory()->create([
+            'nickname' => 'SuperAdmin001',
+            'password' => Hash::make('maymaws14'),
+            'role' => 'superadmin',
         ]);
     }
 }

@@ -78,9 +78,9 @@ class UserService
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
 
-    public function listUser(int $perPage = 15)
+    public function listUser(int $perPage = 15, array $filters = [])
     {
-        $collection = $this->userRepository->paginate($perPage);
+        $collection = $this->userRepository->paginate($perPage, $filters);
 
         return UserResource::collection($collection);
     }

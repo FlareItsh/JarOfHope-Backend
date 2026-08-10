@@ -22,6 +22,10 @@ class AttachmentController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'file' => 'nullable|file|max:5120',
+            'file_size' => 'nullable|numeric|max:5242880',
+        ]);
         return $this->attachmentService->createAttachment($request->all());
     }
 
@@ -32,6 +36,10 @@ class AttachmentController extends Controller
 
     public function update(Request $request, string $uuid)
     {
+        $request->validate([
+            'file' => 'nullable|file|max:5120',
+            'file_size' => 'nullable|numeric|max:5242880',
+        ]);
         return $this->attachmentService->updateAttachment($uuid, $request->all());
     }
 

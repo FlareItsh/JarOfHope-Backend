@@ -8,9 +8,23 @@ use Illuminate\Database\Eloquent\Builder;
 
 class UserRepository
 {
-    public function paginate(int $perPage = 15)
+    public function paginate(int $perPage = 15, array $filters = [])
     {
-        return User::latest()->paginate($perPage);
+        $query = User::latest();
+
+        if (!empty($filters['search'])) {
+            $query->where('nickname', 'like', '%' . $filters['search'] . '%');
+        }
+
+        if (!empty($filters['date_from'])) {
+            $query->whereDate('created_at', '>=', $filters['date_from']);
+        }
+
+        if (!empty($filters['date_to'])) {
+            $query->whereDate('created_at', '<=', $filters['date_to']);
+        }
+
+        return $query->paginate($perPage);
     }
 
     public function create(array $payload)

@@ -19,9 +19,9 @@ class MessageController extends Controller
     {
         $user = $request->user();
         if ($user && $user->role === 'student') {
-            return $this->messageService->listUserMessages($user->uuid, $request->input('per_page', 15));
+            return $this->messageService->listUserMessages($user->uuid, $request->input('per_page', 16));
         }
-        return $this->messageService->listMessage($request->input('per_page', 15));
+        return $this->messageService->listMessage($request->input('per_page', 16));
     }
 
     public function store(Request $request)
